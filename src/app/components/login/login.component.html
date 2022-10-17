@@ -1,0 +1,15 @@
+<div>
+  <form [formGroup]="registerForm">
+    <b>Register with Firebase</b><br>
+    username: <input type="text" formControlName="username"><br>
+    password: <input type="text" formControlName="password"><br>
+    <button (click)="registerAccount()">register</button>
+  </form>
+  <hr>
+  <form [formGroup]="loginForm">
+    <b>Login with Firebase</b><br>
+    username: <input type="text" formControlName="username"><br>
+    password: <input type="text" formControlName="password"><br>
+    <button (click)="loginAccount()">login</button>
+  </form>
+</div>
