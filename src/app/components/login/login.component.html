@@ -1,12 +1,12 @@
 <div>
   <form [formGroup]="registerForm">
-    username: <input type="text" formControlName="username"><br>
+    email: <input type="text" formControlName="email"><br>
     password: <input type="text" formControlName="password"><br>
     <button (click)="registerAccount()">register</button>
   </form>
   <hr>
   <form [formGroup]="loginForm">
-    username: <input type="text" formControlName="username"><br>
+    email: <input type="text" formControlName="email"><br>
     password: <input type="text" formControlName="password"><br>
     <button (click)="loginAccount()">login</button>
   </form>
@@ -18,10 +18,23 @@
   <form>
     <div (click)="loginWithGoogleRedirect()" class="google-redirect">Login with Google Redirect</div>
   </form>
+  <hr>
   <form [formGroup]="addNewBookForm">
     bookName: <input type="text" formControlName="bookName"><br>
     bookCategory: <input type="text" formControlName="bookCategory"><br>
     bookPrice: <input type="number" formControlName="bookPrice"><br>
     <button (click)="addNewBook()">Add new book</button>
+  </form>
+  <hr>
+  <form>
+    <button (click)="getAllBooks()">Get all books</button>
+  </form>
+  <hr>
+  <form>
+    <button (click)="updateExistingBook()">Update existing book</button>
+  </form>
+  <hr>
+  <form>
+    <button (click)="deleteExistingBook()">Delete existing book</button>
   </form>
 </div>

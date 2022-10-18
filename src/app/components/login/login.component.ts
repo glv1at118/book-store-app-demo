@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { FirebaseService } from 'src/app/firebase.service';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, updateDoc, DocumentReference, doc, deleteDoc } from "firebase/firestore";
 
 @Component({
     selector: 'app-login',
@@ -12,12 +12,12 @@ import { collection, addDoc } from "firebase/firestore";
 export class LoginComponent implements OnInit {
 
     public registerForm = new FormGroup({
-        username: new FormControl(''),
+        email: new FormControl(''),
         password: new FormControl(''),
     });
 
     public loginForm = new FormGroup({
-        username: new FormControl(''),
+        email: new FormControl(''),
         password: new FormControl(''),
     });
 
@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
     // Create an account using email & password with firebase
     registerAccount() {
         const auth = getAuth(this.fireBaseService.app);
-        const email = this.registerForm.value.username + '';
+        const email = this.registerForm.value.email + '';
         const password = this.registerForm.value.password + '';
 
         createUserWithEmailAndPassword(auth, email, password)
@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
     // Login an existing account using email & password with firebase
     loginAccount() {
         const auth = getAuth(this.fireBaseService.app);
-        const email = this.loginForm.value.username + '';
+        const email = this.loginForm.value.email + '';
         const password = this.loginForm.value.password + '';
 
         signInWithEmailAndPassword(auth, email, password)
@@ -93,6 +93,7 @@ export class LoginComponent implements OnInit {
         signInWithRedirect(auth, provider);
     }
 
+    // Add a new document record into the target NoSQL collection in firestore db.
     async addNewBook() {
         try {
             const docRef = await addDoc(collection(this.fireBaseService.db, "books"), {
@@ -104,5 +105,28 @@ export class LoginComponent implements OnInit {
         } catch (e) {
             console.error("Error adding document: ", e);
         }
+    }
+
+    // Read all the document records from the firestore db.
+    async getAllBooks() {
+        const querySnapshot = await getDocs(collection(this.fireBaseService.db, "books"));
+        querySnapshot.forEach((doc) => {
+            console.log(doc.data());
+        });
+    }
+
+    // Update an existing document record in the firestore db.
+    async updateExistingBook() {
+        const documentRef = doc(this.fireBaseService.db, "books", "GkezbQACwKVIOATlfQ5x");
+        await updateDoc(documentRef, {
+            bookName: "Witcher 3 Pictures",
+            bookPrice: "65"
+        });
+    }
+
+    // Delete an existing document from the firestore db collection.
+    async deleteExistingBook() {
+        const documentRef = doc(this.fireBaseService.db, "books", "ZDv5gNJjzkiM0GEbMsCB");
+        await deleteDoc(documentRef);
     }
 }

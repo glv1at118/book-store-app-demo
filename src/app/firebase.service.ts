@@ -17,9 +17,9 @@ export class FirebaseService {
         appId: "1:366883408393:web:10aea32e276f45c035c6d8",
         measurementId: "G-XBVTDHSRZ2"
     };
-    public app; // to be used outside app-wise
-    public analytics; // to be use outside app-wise
-    public db;
+    public app; // to be used outside this file and app-wise
+    public analytics; // to be used outside this file and app-wise
+    public db; // to be used outside this file and app-wise
 
     constructor() {
         this.app = initializeApp(this.firebaseConfig);
