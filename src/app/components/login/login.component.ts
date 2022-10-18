@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { FirebaseService } from 'src/app/firebase.service';
+import { collection, addDoc } from "firebase/firestore";
 
 @Component({
     selector: 'app-login',
@@ -18,6 +19,12 @@ export class LoginComponent implements OnInit {
     public loginForm = new FormGroup({
         username: new FormControl(''),
         password: new FormControl(''),
+    });
+
+    public addNewBookForm = new FormGroup({
+        bookName: new FormControl(''),
+        bookCategory: new FormControl(''),
+        bookPrice: new FormControl(0)
     });
 
     constructor(private fireBaseService: FirebaseService) { }
@@ -84,5 +91,18 @@ export class LoginComponent implements OnInit {
         const provider = new GoogleAuthProvider();
 
         signInWithRedirect(auth, provider);
+    }
+
+    async addNewBook() {
+        try {
+            const docRef = await addDoc(collection(this.fireBaseService.db, "books"), {
+                bookName: this.addNewBookForm.value.bookName,
+                bookCategory: this.addNewBookForm.value.bookCategory,
+                bookPrice: this.addNewBookForm.value.bookPrice
+            });
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
     }
 }

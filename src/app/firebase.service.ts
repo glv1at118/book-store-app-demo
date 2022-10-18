@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 @Injectable({
     providedIn: 'root'
@@ -18,9 +19,11 @@ export class FirebaseService {
     };
     public app; // to be used outside app-wise
     public analytics; // to be use outside app-wise
+    public db;
 
     constructor() {
         this.app = initializeApp(this.firebaseConfig);
         this.analytics = getAnalytics(this.app);
+        this.db = getFirestore(this.app);
     }
 }

@@ -18,4 +18,10 @@
   <form>
     <div (click)="loginWithGoogleRedirect()" class="google-redirect">Login with Google Redirect</div>
   </form>
+  <form [formGroup]="addNewBookForm">
+    bookName: <input type="text" formControlName="bookName"><br>
+    bookCategory: <input type="text" formControlName="bookCategory"><br>
+    bookPrice: <input type="number" formControlName="bookPrice"><br>
+    <button (click)="addNewBook()">Add new book</button>
+  </form>
 </div>
