@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
     providedIn: 'root'
 })
 export class FirebaseService {
-    // these config values need to be put in environment files
+    // these firebase config values can be put in environment files
     private firebaseConfig = {
         apiKey: "AIzaSyDFbUAwbUdbSxGccRUaA8IeBHaEiLafzlY",
         authDomain: "book-store-app-e02f4.firebaseapp.com",

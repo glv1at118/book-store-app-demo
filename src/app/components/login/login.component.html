@@ -1,15 +1,21 @@
 <div>
   <form [formGroup]="registerForm">
-    <b>Register with Firebase</b><br>
     username: <input type="text" formControlName="username"><br>
     password: <input type="text" formControlName="password"><br>
     <button (click)="registerAccount()">register</button>
   </form>
   <hr>
   <form [formGroup]="loginForm">
-    <b>Login with Firebase</b><br>
     username: <input type="text" formControlName="username"><br>
     password: <input type="text" formControlName="password"><br>
     <button (click)="loginAccount()">login</button>
+  </form>
+  <hr>
+  <form>
+    <div (click)="loginWithGooglePopUp()" class="google-popup">Login with Google Popup Window</div>
+  </form>
+  <hr>
+  <form>
+    <div (click)="loginWithGoogleRedirect()" class="google-redirect">Login with Google Redirect</div>
   </form>
 </div>
