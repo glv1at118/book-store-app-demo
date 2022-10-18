@@ -1,15 +1,19 @@
 .google-popup {
   cursor: pointer;
+  display: inline-block;
 
   &:hover {
     color: blue;
+    font-weight: bold;
   }
 }
 
 .google-redirect {
   cursor: pointer;
+  display: inline-block;
 
   &:hover {
     color: blue;
+    font-weight: bold;
   }
 }
