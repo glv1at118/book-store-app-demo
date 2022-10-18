@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { FirebaseService } from 'src/app/firebase.service';
-import { collection, addDoc, getDocs, updateDoc, DocumentReference, doc, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, query, where, } from "firebase/firestore";
 
 @Component({
     selector: 'app-login',
@@ -110,6 +110,15 @@ export class LoginComponent implements OnInit {
     // Read all the document records from the firestore db.
     async getAllBooks() {
         const querySnapshot = await getDocs(collection(this.fireBaseService.db, "books"));
+        querySnapshot.forEach((doc) => {
+            console.log(doc.data());
+        });
+    }
+
+    // Read a specific book from the document records.
+    async getSpecificBook() {
+        const q = query(collection(this.fireBaseService.db, "books"), where("bookName", "==", "History of Ancient Greece"));
+        const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             console.log(doc.data());
         });
