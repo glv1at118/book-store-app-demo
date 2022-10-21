@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ref } from '@firebase/storage';
 import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from "firebase/auth";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
-import { getDownloadURL, uploadBytesResumable, UploadTask, UploadTaskSnapshot } from 'firebase/storage';
+import { getDownloadURL, uploadBytesResumable, UploadTask } from 'firebase/storage';
 import { FirebaseService } from 'src/app/firebase.service';
 
 @Component({
@@ -151,57 +151,20 @@ export class LoginComponent implements OnInit {
     }
 
     uploadFile() {
-        this.storageRef = ref(this.fireBaseService.storage, `images/${this.fileChosen.name}`);
-        const uploadTask: UploadTask = uploadBytesResumable(this.storageRef, this.fileChosen, {
-            contentType: 'image/jpeg',
-        });
+        this.storageRef = ref(this.fireBaseService.storage, `files/${this.fileChosen.name}`);
+        const uploadTask: UploadTask = uploadBytesResumable(this.storageRef, this.fileChosen);
         uploadTask.on('state_changed', {
-            next: (snapShotAtThisMoment: UploadTaskSnapshot) => {
-                console.log(
-                    `Uploading progress: ${snapShotAtThisMoment.bytesTransferred / snapShotAtThisMoment.totalBytes * 100} %`
-                );
-                switch (this.uploadValue) {
-                    case 'pause':
-                        uploadTask.pause();
-                        break;
-                    case 'resume':
-                        uploadTask.resume();
-                        break;
-                    case 'cancel':
-                        uploadTask.cancel();
-                        break;
-                    default:
-                        break;
-                }
-                switch (snapShotAtThisMoment.state) {
-                    case 'paused':
-                        console.log("it's paused!");
-                        break;
-                    case 'canceled':
-                        console.log("It's canceled!");
-                        break;
-                    default:
-                        break;
-                }
+            next(snapShot) {
+                console.log('Uploading: ' + snapShot.bytesTransferred / snapShot.totalBytes * 100 + ' %');
             },
-            error: (error) => console.log(error),
-            complete: () => {
-                getDownloadURL(uploadTask.snapshot.ref).then(res => {
-                    console.log('Download url is at: ' + res);
+            error(error) {
+                console.log(error);
+            },
+            complete() {
+                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                    console.log(`Upload completes, access the file at ${url}`);
                 });
             }
         });
-    }
-
-    pauseUpload() {
-        this.uploadValue = 'pause';
-    }
-
-    resumeUpload() {
-        this.uploadValue = 'resume';
-    }
-
-    cancelUpload() {
-        this.uploadValue = 'cancel';
     }
 }
