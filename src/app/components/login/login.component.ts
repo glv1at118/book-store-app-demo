@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult } from "firebase/auth";
+import { ref } from '@firebase/storage';
+import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from "firebase/auth";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { getDownloadURL, uploadBytesResumable, UploadTask, UploadTaskSnapshot } from 'firebase/storage';
 import { FirebaseService } from 'src/app/firebase.service';
-import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, query, where, } from "firebase/firestore";
 
 @Component({
     selector: 'app-login',
@@ -26,6 +28,10 @@ export class LoginComponent implements OnInit {
         bookCategory: new FormControl(''),
         bookPrice: new FormControl(0)
     });
+
+    public fileChosen: any = null;
+    public storageRef: any = null;
+    public uploadValue: string = '';
 
     constructor(private fireBaseService: FirebaseService) { }
 
@@ -137,5 +143,65 @@ export class LoginComponent implements OnInit {
     async deleteExistingBook() {
         const documentRef = doc(this.fireBaseService.db, "books", "ZDv5gNJjzkiM0GEbMsCB");
         await deleteDoc(documentRef);
+    }
+
+    getFileObject(event: any) {
+        this.fileChosen = event.target.files[0];
+        console.log(this.fileChosen);
+    }
+
+    uploadFile() {
+        this.storageRef = ref(this.fireBaseService.storage, `images/${this.fileChosen.name}`);
+        const uploadTask: UploadTask = uploadBytesResumable(this.storageRef, this.fileChosen, {
+            contentType: 'image/jpeg',
+        });
+        uploadTask.on('state_changed', {
+            next: (snapShotAtThisMoment: UploadTaskSnapshot) => {
+                console.log(
+                    `Uploading progress: ${snapShotAtThisMoment.bytesTransferred / snapShotAtThisMoment.totalBytes * 100} %`
+                );
+                switch (this.uploadValue) {
+                    case 'pause':
+                        uploadTask.pause();
+                        break;
+                    case 'resume':
+                        uploadTask.resume();
+                        break;
+                    case 'cancel':
+                        uploadTask.cancel();
+                        break;
+                    default:
+                        break;
+                }
+                switch (snapShotAtThisMoment.state) {
+                    case 'paused':
+                        console.log("it's paused!");
+                        break;
+                    case 'canceled':
+                        console.log("It's canceled!");
+                        break;
+                    default:
+                        break;
+                }
+            },
+            error: (error) => console.log(error),
+            complete: () => {
+                getDownloadURL(uploadTask.snapshot.ref).then(res => {
+                    console.log('Download url is at: ' + res);
+                });
+            }
+        });
+    }
+
+    pauseUpload() {
+        this.uploadValue = 'pause';
+    }
+
+    resumeUpload() {
+        this.uploadValue = 'resume';
+    }
+
+    cancelUpload() {
+        this.uploadValue = 'cancel';
     }
 }
