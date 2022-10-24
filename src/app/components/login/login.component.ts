@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ref } from '@firebase/storage';
-import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, Unsubscribe } from "firebase/auth";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, onSnapshot } from "firebase/firestore";
 import { getDownloadURL, uploadBytesResumable, UploadTask } from 'firebase/storage';
 import { FirebaseService } from 'src/app/firebase.service';
 
@@ -11,7 +11,7 @@ import { FirebaseService } from 'src/app/firebase.service';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
     public registerForm = new FormGroup({
         email: new FormControl(''),
@@ -33,6 +33,9 @@ export class LoginComponent implements OnInit {
     public storageRef: any = null;
     public uploadValue: string = '';
 
+    // listener set on client side, to listen for changes on a particular db collection, or db query on firestore cloud.
+    public realTimeUpdatesUnsubscriber: any = null;
+
     constructor(private fireBaseService: FirebaseService) { }
 
     ngOnInit(): void {
@@ -44,6 +47,14 @@ export class LoginComponent implements OnInit {
             }).catch((error) => {
                 console.log(error);
             });
+
+        // listen for real-time updates for a firestore db collection or specific query.
+        this.monitorBookCollectionRealTimeUpdates();
+    }
+
+    ngOnDestroy(): void {
+        // release the listener resource and internet bandwidth.
+        this.realTimeUpdatesUnsubscriber.unsubscribe();
     }
 
     // Create an account using email & password with firebase
@@ -145,11 +156,13 @@ export class LoginComponent implements OnInit {
         await deleteDoc(documentRef);
     }
 
+    // When a file is chosen from the <input> element on page, it passes the file to the fileChosen field member.
     getFileObject(event: any) {
         this.fileChosen = event.target.files[0];
         console.log(this.fileChosen);
     }
 
+    // Upload the file chosen from input element, to firebase storage.
     uploadFile() {
         this.storageRef = ref(this.fireBaseService.storage, `files/${this.fileChosen.name}`);
         const uploadTask: UploadTask = uploadBytesResumable(this.storageRef, this.fileChosen);
@@ -166,5 +179,32 @@ export class LoginComponent implements OnInit {
                 });
             }
         });
+    }
+
+    // Monitor the real-time updates for the Book collection in firestore db.
+    monitorBookCollectionRealTimeUpdates() {
+        const q = query(collection(this.fireBaseService.db, "books"));
+        this.realTimeUpdatesUnsubscriber = onSnapshot(q, (querySnapshot) => {
+            const books: any[] = [];
+            querySnapshot.forEach((doc) => {
+                books.push(doc.data());
+            });
+            console.log("All books on firestore cloud: ", books);
+
+            // here is to find out what exactly the part of data has been changed.
+            querySnapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    console.log("Book added: ", change.doc.data());
+                }
+                if (change.type === "modified") {
+                    console.log("Book modified: ", change.doc.data());
+                }
+                if (change.type === "removed") {
+                    console.log("Book removed: ", change.doc.data());
+                }
+            });
+        });
+        // so after the "onSnapshot" listener is running, any changes on the books collection on firestore,
+        // will trigger the console.log printing on client side. --> This can be used like kinvey sync.
     }
 }

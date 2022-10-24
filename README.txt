@@ -14,3 +14,13 @@ Firebase storage is able to preview the files very conveniently, and is able to 
 It's also able to return the bytes already uploaded value in a current snapshot,
 which enables us to calculate how much percentage of the file is uploaded.
 From the ease of use side, it's easier and more straight-forward than Kinvey file Api.
+
+Firestore is able to listen to a particular collection on cloud, or a particular query against a collection (namely a subset of the result), in real-time.
+Whenever there's data changes such as new added or deletion of document, resequencing of docs, field changes for a particular document, and etc, the listener on the client side will trigger.
+We're able to know whether that new "delta" change is from local and not yet sent to firestore cloud, OR, 
+if that "delta" change is retrived from the cloud side.
+We're also able to know what exactly of the part of data has been changed.
+This feature can be used as a replacement for kinvey's synchronization process.
+Once the listener is not used anymore it needs to be unsubscribed, to release resource and bandwith.
+https://firebase.google.com/docs/firestore/query-data/listen
+
