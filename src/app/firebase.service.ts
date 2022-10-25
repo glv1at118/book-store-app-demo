@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { CACHE_SIZE_UNLIMITED, enableIndexedDbPersistence, initializeFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 @Injectable({
@@ -26,7 +26,26 @@ export class FirebaseService {
     constructor() {
         this.app = initializeApp(this.firebaseConfig);
         this.analytics = getAnalytics(this.app);
-        this.db = getFirestore(this.app);
+        // this.db = getFirestore(this.app); // Option 1: This means the firestore db is accessible only online
+        this.db = initializeFirestore(this.app, { // Option 2: This means the firestore db is accessible both online & offline.
+            cacheSizeBytes: CACHE_SIZE_UNLIMITED // For offline, firestore db is to be saved to IndexedDB.
+        });
         this.storage = getStorage(this.app);
+
+        // enable the offline persistence capability for firestore web app, it's going to persist to IndexedDB.
+        this.enableFireStoreOfflineFeature();
+    }
+
+    // This method enables the offline capability for firestore. By default for firestore on web apps,
+    // it's disabled. For apple or android native apps, it's by default enabled.
+    enableFireStoreOfflineFeature() {
+        enableIndexedDbPersistence(this.db)
+            .catch((err) => {
+                if (err.code == 'failed-precondition') {
+                    console.log('Multiple tabs open, persistence can only be enabled in one tab at a a time');
+                } else if (err.code == 'unimplemented') {
+                    console.log('The current browser does not support all of the features required to enable persistence');
+                }
+            });
     }
 }

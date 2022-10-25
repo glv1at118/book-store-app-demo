@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ref } from '@firebase/storage';
-import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, Unsubscribe } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, onSnapshot } from "firebase/firestore";
+import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from "firebase/auth";
+import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { getDownloadURL, uploadBytesResumable, UploadTask } from 'firebase/storage';
 import { FirebaseService } from 'src/app/firebase.service';
 

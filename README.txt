@@ -24,3 +24,4 @@ This feature can be used as a replacement for kinvey's synchronization process.
 Once the listener is not used anymore it needs to be unsubscribed, to release resource and bandwith.
 https://firebase.google.com/docs/firestore/query-data/listen
 
+Cloud Firestore supports offline data persistence. This feature caches a copy of the Cloud Firestore data that your app is actively using, so your app can access the data when the device is offline. You can write, read, listen to, and query the cached data. When the device comes back online, Cloud Firestore synchronizes any local changes made by your app to the Cloud Firestore backend.
