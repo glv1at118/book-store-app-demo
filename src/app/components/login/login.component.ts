@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ref } from '@firebase/storage';
 import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where, disableNetwork, enableNetwork, DocumentData } from "firebase/firestore";
 import { getDownloadURL, uploadBytesResumable, UploadTask } from 'firebase/storage';
 import { FirebaseService } from 'src/app/firebase.service';
 
@@ -126,10 +126,15 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     // Read all the document records from the firestore db.
     async getAllBooks() {
+        console.time('get-all');
         const querySnapshot = await getDocs(collection(this.fireBaseService.db, "books"));
+        const booksArray: DocumentData[] = [];
         querySnapshot.forEach((doc) => {
-            console.log(doc.data());
+            booksArray.push(doc.data());
         });
+        console.log(booksArray);
+        console.log('data is retrieved from cache: ', querySnapshot.metadata.fromCache);
+        console.timeEnd('get-all');
     }
 
     // Read a specific book from the document records.
@@ -143,9 +148,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     // Update an existing document record in the firestore db.
     async updateExistingBook() {
-        const documentRef = doc(this.fireBaseService.db, "books", "GkezbQACwKVIOATlfQ5x");
+        const documentRef = doc(this.fireBaseService.db, "books", "259Jx8uRMfvjOpPy4S5D");
         await updateDoc(documentRef, {
-            bookName: "Witcher 3 Pictures",
+            bookName: "History of Ancient America",
             bookPrice: "65"
         });
     }
@@ -185,26 +190,58 @@ export class LoginComponent implements OnInit, OnDestroy {
     monitorBookCollectionRealTimeUpdates() {
         const q = query(collection(this.fireBaseService.db, "books"));
         this.realTimeUpdatesUnsubscriber = onSnapshot(q, (querySnapshot) => {
-            const books: any[] = [];
-            querySnapshot.forEach((doc) => {
-                books.push(doc.data());
-            });
-            console.log("All books on firestore cloud: ", books);
+            // const books: any[] = [];
+            // querySnapshot.forEach((doc) => {
+            //     books.push(doc.data());
+            // });
+            // console.log("All books on firestore cloud: ", books);
 
-            // here is to find out what exactly the part of data has been changed.
-            querySnapshot.docChanges().forEach((change) => {
-                if (change.type === "added") {
-                    console.log("Book added: ", change.doc.data());
-                }
-                if (change.type === "modified") {
-                    console.log("Book modified: ", change.doc.data());
-                }
-                if (change.type === "removed") {
-                    console.log("Book removed: ", change.doc.data());
-                }
-            });
+            // // here is to find out what exactly the part of data has been changed.
+            // querySnapshot.docChanges().forEach((change) => {
+            //     if (change.type === "added") {
+            //         console.log("Book added: ", change.doc.data());
+            //     }
+            //     if (change.type === "modified") {
+            //         console.log("Book modified: ", change.doc.data());
+            //     }
+            //     if (change.type === "removed") {
+            //         console.log("Book removed: ", change.doc.data());
+            //     }
+            // });
+            console.log(`local data is updated with firestore cloud data.`, querySnapshot);
         });
         // so after the "onSnapshot" listener is running, any changes on the books collection on firestore,
         // will trigger the console.log printing on client side. --> This can be used like kinvey sync.
+    }
+
+    // This disables the app's connection to firestore cloud db. The internet connection is not affected.
+    async disableFirestoreConnect() {
+        await disableNetwork(this.fireBaseService.db);
+        console.log("Connection to firestore is disabled.");
+    }
+
+    // This enables the app's connection to firestore cloud db. The internet connection is not affected.
+    async enableFirestoreConnect() {
+        await enableNetwork(this.fireBaseService.db);
+        console.log("Connection to firestore is enabled.");
+    }
+
+    async insertMassiveData() {
+        for (let i = 0; i < 10000; i++) {
+            let bookName = `Test Book ${i}`;
+            let bookCategory = `Test Book Category ${i}`;
+            let bookPrice = i + 1;
+            let bookIntro = {
+                introTitle: `introTitle ${i}`,
+                introText: `introText ${i}`
+            };
+            let docRef = await addDoc(collection(this.fireBaseService.db, "books"), {
+                bookName,
+                bookCategory,
+                bookPrice,
+                bookIntro
+            });
+            console.log("Document written with ID: ", docRef.id);
+        }
     }
 }

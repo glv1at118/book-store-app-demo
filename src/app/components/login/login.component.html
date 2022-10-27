@@ -11,13 +11,9 @@
     <button (click)="loginAccount()">login</button>
   </form>
   <hr>
-  <form>
-    <div (click)="loginWithGooglePopUp()" class="google-popup">Login with Google Popup Window</div>
-  </form>
+  <div (click)="loginWithGooglePopUp()" class="google-popup">Login with Google Popup Window</div>
   <hr>
-  <form>
-    <div (click)="loginWithGoogleRedirect()" class="google-redirect">Login with Google Redirect</div>
-  </form>
+  <div (click)="loginWithGoogleRedirect()" class="google-redirect">Login with Google Redirect</div>
   <hr>
   <form [formGroup]="addNewBookForm">
     bookName: <input type="text" formControlName="bookName"><br>
@@ -26,24 +22,19 @@
     <button (click)="addNewBook()">Add new book</button>
   </form>
   <hr>
-  <form>
-    <button (click)="getAllBooks()">Get all books</button>
-  </form>
+  <button (click)="getAllBooks()" style="color: red;">Get all books</button>
   <hr>
-  <form>
-    <button (click)="getSpecificBook()">Get specific books</button>
-  </form>
+  <button (click)="getSpecificBook()">Get specific books</button>
   <hr>
-  <form>
-    <button (click)="updateExistingBook()">Update existing book</button>
-  </form>
+  <button (click)="updateExistingBook()">Update existing book</button>
   <hr>
-  <form>
-    <button (click)="deleteExistingBook()">Delete existing book</button>
-  </form>
+  <button (click)="deleteExistingBook()">Delete existing book</button>
   <hr>
-  <form>
-    <input type="file" (change)="getFileObject($event)"><br>
-    <div (click)="uploadFile()" class="upload-class">upload file</div>
-  </form>
+  <input type="file" (change)="getFileObject($event)"><br>
+  <div (click)="uploadFile()" class="upload-class">upload file</div>
+  <hr>
+  <button (click)="disableFirestoreConnect()">disable firestore connect</button>
+  <button (click)="enableFirestoreConnect()">enable firestore connect</button>
+  <hr>
+  <button (click)="insertMassiveData()">insert massive amount of data to books collection</button>
 </div>
