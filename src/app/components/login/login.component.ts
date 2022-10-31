@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ref } from '@firebase/storage';
 import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where, disableNetwork, enableNetwork, DocumentData } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, disableNetwork, doc, DocumentData, enableNetwork, getDocs, getDocsFromCache, getDocsFromServer, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { getDownloadURL, uploadBytesResumable, UploadTask } from 'firebase/storage';
 import { FirebaseService } from 'src/app/firebase.service';
 
@@ -48,13 +48,12 @@ export class LoginComponent implements OnInit, OnDestroy {
                 console.log(error);
             });
 
-        // listen for real-time updates for a firestore db collection or specific query.
-        this.monitorBookCollectionRealTimeUpdates();
+        this.heartBeatCachedDbUpdateRunner();
     }
 
     ngOnDestroy(): void {
         // release the listener resource and internet bandwidth.
-        this.realTimeUpdatesUnsubscriber.unsubscribe();
+        this.realTimeUpdatesUnsubscriber();
     }
 
     // Create an account using email & password with firebase
@@ -137,6 +136,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         console.timeEnd('get-all');
     }
 
+    async getAllBooksFromCache() {
+        const querySnapshot = await getDocsFromCache(collection(this.fireBaseService.db, "books"));
+        const booksArray: DocumentData[] = [];
+        querySnapshot.forEach((doc) => {
+            booksArray.push(doc.data());
+        });
+        console.log(booksArray);
+        console.log('data is retrieved from cache: ', querySnapshot.metadata.fromCache);
+    }
+
     // Read a specific book from the document records.
     async getSpecificBook() {
         const q = query(collection(this.fireBaseService.db, "books"), where("bookName", "==", "History of Ancient Greece"));
@@ -186,7 +195,40 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
     }
 
+    // This disables the app's connection to firestore cloud db. The internet connection is not affected.
+    async disableFirestoreConnect() {
+        await disableNetwork(this.fireBaseService.db);
+        console.log("Connection to firestore is disabled.");
+    }
+
+    // This enables the app's connection to firestore cloud db. The internet connection is not affected.
+    async enableFirestoreConnect() {
+        await enableNetwork(this.fireBaseService.db);
+        console.log("Connection to firestore is enabled.");
+    }
+
+    async insertChunkOfData() {
+        for (let i = 0; i < 10; i++) {
+            let bookName = `Test Book ${i}`;
+            let bookCategory = `Test Book Category ${i}`;
+            let bookPrice = i + 1;
+            let bookIntro = {
+                introTitle: `introTitle ${i}`,
+                introText: `introText ${i}`
+            };
+            let docRef = await addDoc(collection(this.fireBaseService.db, "books"), {
+                bookName,
+                bookCategory,
+                bookPrice,
+                bookIntro
+            });
+            console.log("Document written with ID: ", docRef.id);
+        }
+    }
+
     // Monitor the real-time updates for the Book collection in firestore db.
+    // Once it's called, the client will listen for real-time updates for a firestore db collection or specific query.
+    // and then correspondingly update the local cached db.
     monitorBookCollectionRealTimeUpdates() {
         const q = query(collection(this.fireBaseService.db, "books"));
         this.realTimeUpdatesUnsubscriber = onSnapshot(q, (querySnapshot) => {
@@ -208,40 +250,24 @@ export class LoginComponent implements OnInit, OnDestroy {
             //         console.log("Book removed: ", change.doc.data());
             //     }
             // });
+
+            // the observable stream, as said by the doc, is a never ending stream, so it'll never completes.
+            // so from here we cannot tell when the local db update is finished.
             console.log(`local data is updated with firestore cloud data.`, querySnapshot);
         });
         // so after the "onSnapshot" listener is running, any changes on the books collection on firestore,
         // will trigger the console.log printing on client side. --> This can be used like kinvey sync.
     }
 
-    // This disables the app's connection to firestore cloud db. The internet connection is not affected.
-    async disableFirestoreConnect() {
-        await disableNetwork(this.fireBaseService.db);
-        console.log("Connection to firestore is disabled.");
-    }
+    heartBeatCachedDbUpdateRunner() {
+        // assume that this timer runs every 20 secs --> so it's mocking delta-sync every 10 mins in MRS
+        window.setInterval(async () => {
+            // it gets the data of interest from server and update the local db asynchronously.
+            const queryOfInterest = query(collection(this.fireBaseService.db, "books"), where("bookCategory", "==", "test class"));
+            await getDocsFromServer(queryOfInterest);
 
-    // This enables the app's connection to firestore cloud db. The internet connection is not affected.
-    async enableFirestoreConnect() {
-        await enableNetwork(this.fireBaseService.db);
-        console.log("Connection to firestore is enabled.");
-    }
-
-    async insertMassiveData() {
-        for (let i = 0; i < 10000; i++) {
-            let bookName = `Test Book ${i}`;
-            let bookCategory = `Test Book Category ${i}`;
-            let bookPrice = i + 1;
-            let bookIntro = {
-                introTitle: `introTitle ${i}`,
-                introText: `introText ${i}`
-            };
-            let docRef = await addDoc(collection(this.fireBaseService.db, "books"), {
-                bookName,
-                bookCategory,
-                bookPrice,
-                bookIntro
-            });
-            console.log("Document written with ID: ", docRef.id);
-        }
+            // await getDocsFromServer(collection(this.fireBaseService.db, "books"));
+            console.log('local cached db is fully up-to-date');
+        }, 1000 * 20);
     }
 }

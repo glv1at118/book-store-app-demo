@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import { CACHE_SIZE_UNLIMITED, enableIndexedDbPersistence, initializeFirestore } from "firebase/firestore";
+import { CACHE_SIZE_UNLIMITED, enableIndexedDbPersistence, getFirestore, initializeFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 @Injectable({
@@ -9,14 +9,22 @@ import { getStorage } from "firebase/storage";
 })
 export class FirebaseService {
     // these firebase config values can be put in environment files
+    // private firebaseConfig = {
+    //     apiKey: "AIzaSyDFbUAwbUdbSxGccRUaA8IeBHaEiLafzlY",
+    //     authDomain: "book-store-app-e02f4.firebaseapp.com",
+    //     projectId: "book-store-app-e02f4",
+    //     storageBucket: "book-store-app-e02f4.appspot.com",
+    //     messagingSenderId: "366883408393",
+    //     appId: "1:366883408393:web:10aea32e276f45c035c6d8",
+    //     measurementId: "G-XBVTDHSRZ2",
+    // };
     private firebaseConfig = {
-        apiKey: "AIzaSyDFbUAwbUdbSxGccRUaA8IeBHaEiLafzlY",
-        authDomain: "book-store-app-e02f4.firebaseapp.com",
-        projectId: "book-store-app-e02f4",
-        storageBucket: "book-store-app-e02f4.appspot.com",
-        messagingSenderId: "366883408393",
-        appId: "1:366883408393:web:10aea32e276f45c035c6d8",
-        measurementId: "G-XBVTDHSRZ2",
+        apiKey: "AIzaSyAK07UXypCuiT721VoUgyRub6NHzB_87Uw",
+        authDomain: "book-store-project-545f9.firebaseapp.com",
+        projectId: "book-store-project-545f9",
+        storageBucket: "book-store-project-545f9.appspot.com",
+        messagingSenderId: "338604703495",
+        appId: "1:338604703495:web:d4744036514eeba3ec0fa2"
     };
     public app;
     public analytics;

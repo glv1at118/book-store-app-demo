@@ -24,6 +24,8 @@
   <hr>
   <button (click)="getAllBooks()" style="color: red;">Get all books</button>
   <hr>
+  <button (click)="getAllBooksFromCache()" style="color: red;">Get all books from cache</button>
+  <hr>
   <button (click)="getSpecificBook()">Get specific books</button>
   <hr>
   <button (click)="updateExistingBook()">Update existing book</button>
@@ -36,5 +38,5 @@
   <button (click)="disableFirestoreConnect()">disable firestore connect</button>
   <button (click)="enableFirestoreConnect()">enable firestore connect</button>
   <hr>
-  <button (click)="insertMassiveData()">insert massive amount of data to books collection</button>
+  <button (click)="insertChunkOfData()">insert some records to books collection</button>
 </div>
