@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ref } from '@firebase/storage';
-import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from "firebase/auth";
 import { addDoc, collection, deleteDoc, disableNetwork, doc, DocumentData, enableNetwork, getDocs, getDocsFromCache, getDocsFromServer, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { getDownloadURL, uploadBytesResumable, UploadTask } from 'firebase/storage';
 import { FirebaseService } from 'src/app/firebase.service';
@@ -49,6 +49,16 @@ export class LoginComponent implements OnInit, OnDestroy {
             });
 
         this.heartBeatCachedDbUpdateRunner();
+
+        // The "onAuthStateChanged" listener listens for authentication status.
+        // Whenever there's a change it will trigger, namely it will trigger when user signs in or logs out.
+        onAuthStateChanged(auth, (data) => {
+            if (data) {
+                console.log("You are logged in!");
+            } else {
+                console.log("You are not logged in!");
+            }
+        });
     }
 
     ngOnDestroy(): void {
