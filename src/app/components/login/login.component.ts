@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ref } from '@firebase/storage';
-import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, signOut } from "firebase/auth";
 import { addDoc, collection, deleteDoc, disableNetwork, doc, DocumentData, enableNetwork, getDocs, getDocsFromCache, getDocsFromServer, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { getDownloadURL, uploadBytesResumable, UploadTask } from 'firebase/storage';
 import { FirebaseService } from 'src/app/firebase.service';
@@ -94,6 +94,12 @@ export class LoginComponent implements OnInit, OnDestroy {
             .catch((error) => {
                 console.log(error);
             });
+    }
+
+    // logs out the current active user
+    logoutAccount() {
+        const auth = getAuth(this.fireBaseService.app);
+        signOut(auth);
     }
 
     // Login using browser's native pop up window and let user choose a gmail account
