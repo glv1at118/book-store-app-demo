@@ -263,10 +263,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         // assume that this timer runs every 20 secs --> so it's mocking delta-sync every 10 mins in MRS
         window.setInterval(async () => {
             // it gets the data of interest from server and update the local db asynchronously.
-            const queryOfInterest = query(collection(this.fireBaseService.db, "books"), where("bookCategory", "==", "test class"));
-            await getDocsFromServer(queryOfInterest);
+            // const queryOfInterest = query(collection(this.fireBaseService.db, "books"), where("bookCategory", "==", "test class"));
+            // await getDocsFromServer(queryOfInterest);
 
-            // await getDocsFromServer(collection(this.fireBaseService.db, "books"));
+            await getDocsFromServer(collection(this.fireBaseService.db, "books"));
             console.log('local cached db is fully up-to-date');
         }, 1000 * 20);
     }
