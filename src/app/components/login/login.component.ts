@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 console.log(error);
             });
 
-        this.heartBeatCachedDbUpdateRunner();
+        // this.heartBeatCachedDbUpdateRunner();
 
         // The "onAuthStateChanged" listener listens for authentication status.
         // Whenever there's a change it will trigger, namely it will trigger when user signs in or logs out.
@@ -224,19 +224,154 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     async insertChunkOfData() {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 100; i++) {
             let bookName = `Test Book ${i}`;
             let bookCategory = `Test Book Category ${i}`;
             let bookPrice = i + 1;
             let bookIntro = {
                 introTitle: `introTitle ${i}`,
-                introText: `introText ${i}`
+                introText: `introText ${i}`,
+                bookPublish: new Date().getMilliseconds(),
+                bookJsonObject: {
+                    property1: `field-property-${i}`,
+                    property2: `field-property-${i + 1}`,
+                    property3: `field-property-${i + 2}`,
+                    property4: `field-property-${i + 3}`,
+                    property5: `field-property-${i + 4}`,
+                    property6: `field-property-${i + 5}`,
+                    property7: `field-property-${i + 6}`,
+                    property8: `field-property-${i + 7}`,
+                    property9: `field-property-${i + 8}`,
+                    property10: `field-property-${i + 9}`,
+                    property11: `field-property-${i + 10}`,
+                    property12: `field-property-${i + 11}`,
+                    property13: `field-property-${i + 12}`,
+                    property14: `field-property-${i + 13}`,
+                    property15: `field-property-${i + 14}`,
+                    property16: `field-property-${i + 15}`,
+                    property17: `field-property-${i + 16}`,
+                    property18: `field-property-${i + 17}`,
+                    property19: `field-property-${i + 18}`,
+                    property20: `field-property-${i + 19}`,
+                }
+            };
+            let bookIntro2 = {
+                introTitle: `introTitle ${i}`,
+                introText: `introText ${i}`,
+                bookPublish: new Date().getMilliseconds(),
+                bookJsonObject: {
+                    property1: `field-property-${i}`,
+                    property2: `field-property-${i + 1}`,
+                    property3: `field-property-${i + 2}`,
+                    property4: `field-property-${i + 3}`,
+                    property5: `field-property-${i + 4}`,
+                    property6: `field-property-${i + 5}`,
+                    property7: `field-property-${i + 6}`,
+                    property8: `field-property-${i + 7}`,
+                    property9: `field-property-${i + 8}`,
+                    property10: `field-property-${i + 9}`,
+                    property11: `field-property-${i + 10}`,
+                    property12: `field-property-${i + 11}`,
+                    property13: `field-property-${i + 12}`,
+                    property14: `field-property-${i + 13}`,
+                    property15: `field-property-${i + 14}`,
+                    property16: `field-property-${i + 15}`,
+                    property17: `field-property-${i + 16}`,
+                    property18: `field-property-${i + 17}`,
+                    property19: `field-property-${i + 18}`,
+                    property20: `field-property-${i + 19}`,
+                }
+            };
+            let bookIntro3 = {
+                introTitle: `introTitle ${i}`,
+                introText: `introText ${i}`,
+                bookPublish: new Date().getMilliseconds(),
+                bookJsonObject: {
+                    property1: `field-property-${i}`,
+                    property2: `field-property-${i + 1}`,
+                    property3: `field-property-${i + 2}`,
+                    property4: `field-property-${i + 3}`,
+                    property5: `field-property-${i + 4}`,
+                    property6: `field-property-${i + 5}`,
+                    property7: `field-property-${i + 6}`,
+                    property8: `field-property-${i + 7}`,
+                    property9: `field-property-${i + 8}`,
+                    property10: `field-property-${i + 9}`,
+                    property11: `field-property-${i + 10}`,
+                    property12: `field-property-${i + 11}`,
+                    property13: `field-property-${i + 12}`,
+                    property14: `field-property-${i + 13}`,
+                    property15: `field-property-${i + 14}`,
+                    property16: `field-property-${i + 15}`,
+                    property17: `field-property-${i + 16}`,
+                    property18: `field-property-${i + 17}`,
+                    property19: `field-property-${i + 18}`,
+                    property20: `field-property-${i + 19}`,
+                }
+            };
+            let bookIntro4 = {
+                introTitle: `introTitle ${i}`,
+                introText: `introText ${i}`,
+                bookPublish: new Date().getMilliseconds(),
+                bookJsonObject: {
+                    property1: `field-property-${i}`,
+                    property2: `field-property-${i + 1}`,
+                    property3: `field-property-${i + 2}`,
+                    property4: `field-property-${i + 3}`,
+                    property5: `field-property-${i + 4}`,
+                    property6: `field-property-${i + 5}`,
+                    property7: `field-property-${i + 6}`,
+                    property8: `field-property-${i + 7}`,
+                    property9: `field-property-${i + 8}`,
+                    property10: `field-property-${i + 9}`,
+                    property11: `field-property-${i + 10}`,
+                    property12: `field-property-${i + 11}`,
+                    property13: `field-property-${i + 12}`,
+                    property14: `field-property-${i + 13}`,
+                    property15: `field-property-${i + 14}`,
+                    property16: `field-property-${i + 15}`,
+                    property17: `field-property-${i + 16}`,
+                    property18: `field-property-${i + 17}`,
+                    property19: `field-property-${i + 18}`,
+                    property20: `field-property-${i + 19}`,
+                }
+            };
+            let bookIntro5 = {
+                introTitle: `introTitle ${i}`,
+                introText: `introText ${i}`,
+                bookPublish: new Date().getMilliseconds(),
+                bookJsonObject: {
+                    property1: `field-property-${i}`,
+                    property2: `field-property-${i + 1}`,
+                    property3: `field-property-${i + 2}`,
+                    property4: `field-property-${i + 3}`,
+                    property5: `field-property-${i + 4}`,
+                    property6: `field-property-${i + 5}`,
+                    property7: `field-property-${i + 6}`,
+                    property8: `field-property-${i + 7}`,
+                    property9: `field-property-${i + 8}`,
+                    property10: `field-property-${i + 9}`,
+                    property11: `field-property-${i + 10}`,
+                    property12: `field-property-${i + 11}`,
+                    property13: `field-property-${i + 12}`,
+                    property14: `field-property-${i + 13}`,
+                    property15: `field-property-${i + 14}`,
+                    property16: `field-property-${i + 15}`,
+                    property17: `field-property-${i + 16}`,
+                    property18: `field-property-${i + 17}`,
+                    property19: `field-property-${i + 18}`,
+                    property20: `field-property-${i + 19}`,
+                }
             };
             let docRef = await addDoc(collection(this.fireBaseService.db, "books"), {
                 bookName,
                 bookCategory,
                 bookPrice,
-                bookIntro
+                bookIntro,
+                bookIntro2,
+                bookIntro3,
+                bookIntro4,
+                bookIntro5
             });
             console.log("Document written with ID: ", docRef.id);
         }
@@ -286,4 +421,15 @@ export class LoginComponent implements OnInit, OnDestroy {
             console.log('local cached db is fully up-to-date');
         }, 1000 * 20);
     }
+
+    async getDocsFromServerTest() {
+        console.time('get massive docs');
+        let result = await getDocsFromServer(collection(this.fireBaseService.db, "books"));
+        console.timeEnd('get massive docs');
+        let arr: any[] = [];
+        result.forEach((value) => {
+            arr.push(value.data());
+        });
+        console.log(arr);
+    };
 }
