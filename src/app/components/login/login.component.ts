@@ -153,7 +153,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     async getAllBooksFromCache() {
+        console.time('get from cache time used');
         const querySnapshot = await getDocsFromCache(collection(this.fireBaseService.db, "books"));
+        console.timeEnd('get from cache time used');
         const booksArray: DocumentData[] = [];
         querySnapshot.forEach((doc) => {
             booksArray.push(doc.data());
