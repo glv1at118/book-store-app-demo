@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ref } from '@firebase/storage';
 import { createUserWithEmailAndPassword, getAuth, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, signOut } from "firebase/auth";
-import { addDoc, collection, deleteDoc, disableNetwork, doc, DocumentData, enableNetwork, getDocs, getDocsFromCache, getDocsFromServer, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, disableNetwork, doc, DocumentData, enableNetwork, getDocs, getDocsFromCache, getDocsFromServer, onSnapshot, query, updateDoc, where, writeBatch } from "firebase/firestore";
 import { getDownloadURL, uploadBytesResumable, UploadTask } from 'firebase/storage';
 import { FirebaseService } from 'src/app/firebase.service';
 
@@ -223,6 +223,156 @@ export class LoginComponent implements OnInit, OnDestroy {
     async enableFirestoreConnect() {
         await enableNetwork(this.fireBaseService.db);
         console.log("Connection to firestore is enabled.");
+    }
+
+    async doBatchedWrite() {
+        const batch = writeBatch(this.fireBaseService.db);
+        for (let i = 0; i < 450; i++) {
+            let documentRef = doc(this.fireBaseService.db, "books", "id_" + new Date().getMilliseconds() + Math.random());
+            let data: any = {
+                bookName: `Test Book ${i}`,
+                bookCategory: `Test Book Category ${i}`,
+                bookPrice: i + 1,
+                bookIntro1: {
+                    introTitle: `introTitle ${i}`,
+                    introText: `introText ${i}`,
+                    bookPublish: new Date().getMilliseconds(),
+                    bookJsonObject: {
+                        property1: `field-property-${i}`,
+                        property2: `field-property-${i + 1}`,
+                        property3: `field-property-${i + 2}`,
+                        property4: `field-property-${i + 3}`,
+                        property5: `field-property-${i + 4}`,
+                        property6: `field-property-${i + 5}`,
+                        property7: `field-property-${i + 6}`,
+                        property8: `field-property-${i + 7}`,
+                        property9: `field-property-${i + 8}`,
+                        property10: `field-property-${i + 9}`,
+                        property11: `field-property-${i + 10}`,
+                        property12: `field-property-${i + 11}`,
+                        property13: `field-property-${i + 12}`,
+                        property14: `field-property-${i + 13}`,
+                        property15: `field-property-${i + 14}`,
+                        property16: `field-property-${i + 15}`,
+                        property17: `field-property-${i + 16}`,
+                        property18: `field-property-${i + 17}`,
+                        property19: `field-property-${i + 18}`,
+                        property20: `field-property-${i + 19}`,
+                    }
+                },
+                bookIntro2: {
+                    introTitle: `introTitle ${i}`,
+                    introText: `introText ${i}`,
+                    bookPublish: new Date().getMilliseconds(),
+                    bookJsonObject: {
+                        property1: `field-property-${i}`,
+                        property2: `field-property-${i + 1}`,
+                        property3: `field-property-${i + 2}`,
+                        property4: `field-property-${i + 3}`,
+                        property5: `field-property-${i + 4}`,
+                        property6: `field-property-${i + 5}`,
+                        property7: `field-property-${i + 6}`,
+                        property8: `field-property-${i + 7}`,
+                        property9: `field-property-${i + 8}`,
+                        property10: `field-property-${i + 9}`,
+                        property11: `field-property-${i + 10}`,
+                        property12: `field-property-${i + 11}`,
+                        property13: `field-property-${i + 12}`,
+                        property14: `field-property-${i + 13}`,
+                        property15: `field-property-${i + 14}`,
+                        property16: `field-property-${i + 15}`,
+                        property17: `field-property-${i + 16}`,
+                        property18: `field-property-${i + 17}`,
+                        property19: `field-property-${i + 18}`,
+                        property20: `field-property-${i + 19}`,
+                    }
+                },
+                bookIntro3: {
+                    introTitle: `introTitle ${i}`,
+                    introText: `introText ${i}`,
+                    bookPublish: new Date().getMilliseconds(),
+                    bookJsonObject: {
+                        property1: `field-property-${i}`,
+                        property2: `field-property-${i + 1}`,
+                        property3: `field-property-${i + 2}`,
+                        property4: `field-property-${i + 3}`,
+                        property5: `field-property-${i + 4}`,
+                        property6: `field-property-${i + 5}`,
+                        property7: `field-property-${i + 6}`,
+                        property8: `field-property-${i + 7}`,
+                        property9: `field-property-${i + 8}`,
+                        property10: `field-property-${i + 9}`,
+                        property11: `field-property-${i + 10}`,
+                        property12: `field-property-${i + 11}`,
+                        property13: `field-property-${i + 12}`,
+                        property14: `field-property-${i + 13}`,
+                        property15: `field-property-${i + 14}`,
+                        property16: `field-property-${i + 15}`,
+                        property17: `field-property-${i + 16}`,
+                        property18: `field-property-${i + 17}`,
+                        property19: `field-property-${i + 18}`,
+                        property20: `field-property-${i + 19}`,
+                    }
+                },
+                bookIntro4: {
+                    introTitle: `introTitle ${i}`,
+                    introText: `introText ${i}`,
+                    bookPublish: new Date().getMilliseconds(),
+                    bookJsonObject: {
+                        property1: `field-property-${i}`,
+                        property2: `field-property-${i + 1}`,
+                        property3: `field-property-${i + 2}`,
+                        property4: `field-property-${i + 3}`,
+                        property5: `field-property-${i + 4}`,
+                        property6: `field-property-${i + 5}`,
+                        property7: `field-property-${i + 6}`,
+                        property8: `field-property-${i + 7}`,
+                        property9: `field-property-${i + 8}`,
+                        property10: `field-property-${i + 9}`,
+                        property11: `field-property-${i + 10}`,
+                        property12: `field-property-${i + 11}`,
+                        property13: `field-property-${i + 12}`,
+                        property14: `field-property-${i + 13}`,
+                        property15: `field-property-${i + 14}`,
+                        property16: `field-property-${i + 15}`,
+                        property17: `field-property-${i + 16}`,
+                        property18: `field-property-${i + 17}`,
+                        property19: `field-property-${i + 18}`,
+                        property20: `field-property-${i + 19}`,
+                    }
+                },
+                bookIntro5: {
+                    introTitle: `introTitle ${i}`,
+                    introText: `introText ${i}`,
+                    bookPublish: new Date().getMilliseconds(),
+                    bookJsonObject: {
+                        property1: `field-property-${i}`,
+                        property2: `field-property-${i + 1}`,
+                        property3: `field-property-${i + 2}`,
+                        property4: `field-property-${i + 3}`,
+                        property5: `field-property-${i + 4}`,
+                        property6: `field-property-${i + 5}`,
+                        property7: `field-property-${i + 6}`,
+                        property8: `field-property-${i + 7}`,
+                        property9: `field-property-${i + 8}`,
+                        property10: `field-property-${i + 9}`,
+                        property11: `field-property-${i + 10}`,
+                        property12: `field-property-${i + 11}`,
+                        property13: `field-property-${i + 12}`,
+                        property14: `field-property-${i + 13}`,
+                        property15: `field-property-${i + 14}`,
+                        property16: `field-property-${i + 15}`,
+                        property17: `field-property-${i + 16}`,
+                        property18: `field-property-${i + 17}`,
+                        property19: `field-property-${i + 18}`,
+                        property20: `field-property-${i + 19}`,
+                    }
+                },
+            };
+            batch.set(documentRef, data);
+        }
+        await batch.commit();
+        console.log('Batch write is complete!');
     }
 
     async insertChunkOfData() {
