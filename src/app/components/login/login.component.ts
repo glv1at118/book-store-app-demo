@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 console.log(error);
             });
 
+        this.monitorBookCollectionRealTimeUpdates();
         // this.heartBeatCachedDbUpdateRunner();
 
         // The "onAuthStateChanged" listener listens for authentication status.
@@ -175,10 +176,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     // Update an existing document record in the firestore db.
     async updateExistingBook() {
-        const documentRef = doc(this.fireBaseService.db, "books", "259Jx8uRMfvjOpPy4S5D");
+        const documentRef = doc(this.fireBaseService.db, "books", "HDtrO0DBcL5lTvh84QKb");
         await updateDoc(documentRef, {
-            bookName: "History of Ancient America",
-            bookPrice: "65"
+            bookName: "local",
+            bookPrice: "local",
+            bookCategory: "local"
         });
     }
 

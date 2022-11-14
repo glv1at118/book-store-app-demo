@@ -25,3 +25,7 @@ Once the listener is not used anymore it needs to be unsubscribed, to release re
 https://firebase.google.com/docs/firestore/query-data/listen
 
 Cloud Firestore supports offline data persistence. This feature caches a copy of the Cloud Firestore data that your app is actively using, so your app can access the data when the device is offline. You can write, read, listen to, and query the cached data. When the device comes back online, Cloud Firestore synchronizes any local changes made by your app to the Cloud Firestore backend.
+
+Manually give it a timestamp to resolve data update conflicts:
+https://stackoverflow.com/questions/40960749/firebase-two-offline-devices-modifying-same-data-and-order-of-changes
+Timestamp here represents the time when the data is changed, NOT when data reaches server.
